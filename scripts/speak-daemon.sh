@@ -9,8 +9,9 @@ if [[ -z "$TRANSCRIPT_PATH" ]] || [[ ! -f "$TRANSCRIPT_PATH" ]]; then
 fi
 
 # Configurable voice settings via environment variables
-CONVO_VOICE="${CONVO_VOICE:-Daniel}"
-CONVO_RATE="${CONVO_RATE:-195}"
+# Empty default = use system voice (supports Siri voices set as system default)
+CONVO_VOICE="${CONVO_VOICE:-}"
+CONVO_RATE="${CONVO_RATE:-185}"
 
 # Track what we've already spoken to avoid repeats
 SPOKEN_FILE="/tmp/convo-spoken-$$"
@@ -32,7 +33,11 @@ tail -f "$TRANSCRIPT_PATH" 2>/dev/null | while IFS= read -r line; do
           SUMMARY=$(echo "$SUMMARY" | sed 's/`//g; s/\*//g; s/#//g' | cut -c1-200)
           # Kill any in-progress speech to avoid overlap
           killall say 2>/dev/null || true
-          say -v "$CONVO_VOICE" -r "$CONVO_RATE" "$SUMMARY" &
+          if [[ -n "$CONVO_VOICE" ]]; then
+            say -v "$CONVO_VOICE" -r "$CONVO_RATE" "$SUMMARY" &
+          else
+            say -r "$CONVO_RATE" "$SUMMARY" &
+          fi
         fi
       fi
     fi

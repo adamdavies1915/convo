@@ -2,7 +2,7 @@
 
 **Star Trek Computer for Claude Code** — Claude speaks a one-sentence summary of every response aloud.
 
-You ask a question. Claude responds with text on screen. Daniel (or your preferred macOS voice) speaks the headline. Like the Enterprise computer.
+You ask a question. Claude responds with text on screen. Your Mac speaks the headline. Like the Enterprise computer.
 
 ## How it works
 
@@ -18,7 +18,7 @@ Claude (on screen):
 
 The issue is in src/auth/refresh.ts at line 47...
 
-Daniel (spoken): "The token refresh has a race condition when two requests arrive simultaneously."
+(spoken): "The token refresh has a race condition when two requests arrive simultaneously."
 ```
 
 ## Requirements
@@ -30,7 +30,7 @@ Daniel (spoken): "The token refresh has a race condition when two requests arriv
 ## Install
 
 ```bash
-git clone https://github.com/yourusername/convo.git
+git clone https://github.com/adamdavies1915/convo.git
 cd convo
 bash install.sh
 ```
@@ -43,26 +43,43 @@ Start a new Claude Code session — that's it.
 bash uninstall.sh
 ```
 
-## Configuration
+## Voice setup
 
-Set environment variables (in your `.zshrc` or `.bashrc`):
+### Recommended: Siri voices (best quality)
+
+macOS has high-quality Siri neural voices that sound dramatically better than the standard voices. To use one:
+
+1. Open **System Settings → Accessibility → Spoken Content → System Voice → Manage Voices**
+2. Download a Siri voice (e.g. Siri Voice 1 or Voice 4)
+3. Set it as your **System Voice** (click OK to confirm)
+4. That's it — convo uses the system voice by default
+
+> **Note:** Siri voices can't be targeted by name with `say -v`. They only work when set as the system default. This is a macOS limitation (Ventura+).
+
+### Alternative: Standard voices
+
+If you prefer a specific named voice, set the `CONVO_VOICE` environment variable in your `.zshrc` or `.bashrc`:
 
 ```bash
-# Change voice (default: Daniel)
-export CONVO_VOICE=Samantha
-
-# Change speech rate in words per minute (default: 195)
-export CONVO_RATE=210
+export CONVO_VOICE=Daniel
 ```
 
-Available voices: run `say -v '?'` to see all installed voices.
+Run `say -v '?'` to see all available voices.
 
-Some good options:
 | Voice | Language | Vibe |
 |-------|----------|------|
 | Daniel | British English | Composed, officer-like |
 | Samantha | US English | Clear, natural, warm |
 | Karen | Australian English | Professional, crisp |
+
+### Speed
+
+Default speech rate is 185 words per minute. Adjust with:
+
+```bash
+export CONVO_RATE=175   # slower
+export CONVO_RATE=210   # faster
+```
 
 ## How it works (technical)
 
@@ -71,7 +88,7 @@ SessionStart hook
   → speak-hook.sh (reads transcript path, exits in ~30ms)
     → speak-daemon.sh (background: tail -f transcript.jsonl)
       → detects 🔊 lines in real-time
-        → say -v Daniel -r 195 "summary"
+        → say "summary"
 ```
 
 - **No latency**: daemon watches the transcript file live, speaks the instant the `🔊` line is written
@@ -87,7 +104,7 @@ For even faster response in iTerm2 (fires from screen output, not transcript):
 2. Add trigger:
    - Regex: `🔊 (.+)`
    - Action: Run Command
-   - Parameters: `say -v Daniel -r 195 \1`
+   - Parameters: `say -r 185 \1`
    - Check "Instant"
 
 ## License
