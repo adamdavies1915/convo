@@ -112,16 +112,6 @@ For even faster response in iTerm2 (fires from screen output, not transcript fil
 
 This fires the instant the text renders on screen. Works alongside the daemon — iTerm2 speaks first, daemon deduplicates and stays silent.
 
-## Future: Majel Barrett voice clone
-
-The ultimate goal is to use Majel Barrett's voice (the actual Star Trek Enterprise computer). There's a [trained RVC model](https://huggingface.co/MrM0dZ/MajelBarret) available, but real-time voice cloning requires Apple Silicon for acceptable performance. Options for when you're on an M-series Mac:
-
-- **XTTS v2** — zero-shot voice cloning from a short audio sample (~1-2s per sentence on Apple Silicon)
-- **Qwen3-TTS via MLX** — native Apple Silicon TTS with voice cloning (~100ms first packet)
-- **RVC pipeline** — use the trained Majel model to convert any TTS output into her voice
-
-PRs welcome if you get any of these working!
-
 ## License
 
 MIT
